@@ -3,6 +3,7 @@
 
 // Make _start global.
 .globl _start
+.globl model1_ok
 
 // Entry point for the kernel.
 // r15 -> should begin execution at 0x8000.
@@ -11,11 +12,14 @@
 // r2 -> 0x00000100 - start of ATAGS
 // preserve these registers as argument for kernel_main
 _start:
-    // This set of instructions sets 3 of the 4 cores to go to halt
+    // This set of instructions sets 3 of the 4 cores to go to halt.
+    // Model 1 only has 1 cpu and does not have this instruction, so don't include it if building for model 1
+#ifndef MODEL_1
     mrc p15, #0, r1, c0, c0, #5
     and r1, r1, #3
     cmp r1, #2
     bne halt
+#endif
     // Setup the stack.
     mov sp, #0x8000
 
@@ -39,8 +43,7 @@ _start:
 
     // Call kernel_main
 	mov r2, #0x100
-    ldr r3, =kernel_main
-    blx r3
+    bl kernel_main
     b halt
 
 // halt
