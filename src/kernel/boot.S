@@ -17,7 +17,7 @@ _start:
 #ifndef MODEL_1
     mrc p15, #0, r1, c0, c0, #5
     and r1, r1, #3
-    cmp r1, #2
+    cmp r1, #0
     bne halt
 #endif
     // Setup the stack.  Stack will be 32 KB above kernel image
